@@ -4,8 +4,9 @@ namespace App\Controller;
 
 use App\Entity\Emploi;
 use App\Entity\Annonce;
-use App\Entity\Category;
 use App\Entity\Automobile;
+use App\Entity\Immobilier;
+use App\Repository\AnnonceRepository;
 use JMS\Serializer\SerializerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -43,8 +44,6 @@ class AnnonceController extends AbstractController
                         $category->setMarque($brandModel['marque'])->setModele($brandModel['modele']);
                     }
                 }
-                
-
                 break;
             
             case 'Immobilier':
@@ -67,5 +66,39 @@ class AnnonceController extends AbstractController
         return $response;
     }
 
+
+    /**
+     * @Route("/annonces/{id}", name="get_one_annonce", methods={"GET"})
+     */
+    public function recupererAnnonce(int $id, AnnonceRepository $annonceRepository): ?JsonResponse
+    {
+        $annonce = $annonceRepository->findOneById($id);
+        $annonceCategory = $annonce->getCategory();
+        $data = [
+            'id' => $annonce->getId(),
+            'titre' => $annonce->getTitre(),
+            'contenu' => $annonce->getContenu(),
+        ];
+
+
+        //Recuperation des informations par categories correspondants
+        switch(true) {
+            case $annonceCategory instanceof Automobile:
+                $data['category'] = 'Automobile';
+                $data['marque'] = $annonceCategory->getMarque();
+                $data['modele'] = $annonceCategory->getModele();
+                break;
+            case $annonceCategory instanceof Emploi:
+                $data['category'] = 'Emploi';
+                break;
+
+            case $annonceCategory instanceof Immobilier:
+                $data['category'] = 'Immobilier';
+                break;
+        }
+
+        return new JsonResponse($data, Response::HTTP_OK);
+     
+    }
 
 }

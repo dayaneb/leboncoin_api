@@ -47,4 +47,20 @@ class AnnonceRepository extends ServiceEntityRepository
         ;
     }
     */
+    
+    /**
+     * findById
+     *
+     * @param  mixed $value
+     * @return Annonce
+     */
+    public function findOneById($value): ?Annonce
+    {
+        return $this->createQueryBuilder('a')
+            ->andWhere('a.id = :val')
+            ->setParameter('val', $value)
+            ->getQuery()
+            ->getOneOrNullResult()
+        ;
+    }
 }
