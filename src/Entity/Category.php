@@ -22,10 +22,6 @@ abstract class Category
      */
     private $id;
 
-    /**
-     * @ORM\Column(type="string", length=255)
-     */
-    private $name;
 
     /**
      * @ORM\OneToMany(targetEntity=Annonce::class, mappedBy="Category")
@@ -40,18 +36,6 @@ abstract class Category
     public function getId(): ?int
     {
         return $this->id;
-    }
-
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
-
-    public function setName(string $name): self
-    {
-        $this->name = $name;
-
-        return $this;
     }
 
     /**
