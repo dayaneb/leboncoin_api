@@ -66,38 +66,12 @@ class Automobile extends Category
     public function searchBrandFromModel(string $modeleFromRequest, array $automobileBrandModel)
     {
         foreach ($automobileBrandModel as $brand => $model) {
-            if ($this->strposa($modeleFromRequest, $model, 1) !== false) {
-                $matchingWord = $this->wordMatch($model, ucfirst(strtolower($modeleFromRequest)), strlen($modeleFromRequest));
-                if (!empty($matchingWord)) {
-                    return ['marque'=>$brand, 'modele'=>$matchingWord];
-                }
-            } else {
-                return false;
+            $matchingWord = $this->wordMatch($model, strtolower($modeleFromRequest), 1);
+            if (!empty($matchingWord)) {
+                return ['marque'=>$brand, 'modele'=>$matchingWord];
             }
+
         }
-    }
-        
-    /**
-     * strposa
-     *
-     * @param  mixed $haystack
-     * @param  mixed $needles
-     * @param  mixed $offset
-     * @return void
-     */
-    public function strposa($haystack, $needles=array(), $offset=0)
-    {
-        $chr = array();
-        foreach ($needles as $needle) {
-            $res = stripos($haystack, $needle, $offset);
-            if ($res !== false) {
-                $chr[$needle] = $res;
-            }
-        }
-        if (empty($chr)) {
-            return false;
-        }
-        return min($chr);
     }
     
     /**
@@ -111,23 +85,28 @@ class Automobile extends Category
     public function wordMatch($words, $input, $sensitivity)
     {
         $shortest = -1;
+        $closest = 0;
         foreach ($words as $word) {
-            $lev = levenshtein($input, $word);
-            if ($lev == 0) {
-                $closest = $word;
-                $shortest = 0;
-                break;
-            }
-            if ($lev <= $shortest || $shortest < 0) {
-                $closest  = $word;
-                $shortest = $lev;
+            if (is_int(stripos($input, $word)) ) {
+                $lev = levenshtein($input, $word);
+            
+                if ($lev == 0) {
+                    $closest = $word;
+                    $shortest = 0;
+                    break;
+                }
+                if ($lev <= $shortest || $shortest < 0) {
+                    $closest  = $word;
+                    $shortest = $lev;
+                }
+            } else {
+                continue;
             }
         }
-        
         if ($shortest <= $sensitivity) {
             return $closest;
         } else {
-            return 0;
+            return $closest;
         }
     }
 }

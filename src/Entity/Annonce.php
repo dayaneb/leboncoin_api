@@ -28,7 +28,7 @@ class Annonce
     private $contenu;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="annonces",cascade={"persist"})
+     * @ORM\ManyToOne(targetEntity=Category::class, inversedBy="annonces",cascade={"persist", "remove"})
      */
     private $Category;
 
