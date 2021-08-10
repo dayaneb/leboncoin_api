@@ -32,4 +32,4 @@ Supprimer
 DELLETE  http://127.0.0.1:8000/annonces/{id}
 
 # Commentaires
-Test nécessitant plus de temps, j'ai ici implementé tous les fonctionnalités du CRUD sans les tests unitaires et l'environnement docker
+Test nécessitant plus de temps, j'ai ici implementé toutes les fonctionnalités du CRUD sans les tests unitaires et l'environnement docker
